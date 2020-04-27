@@ -23,10 +23,10 @@
   import HomeSwiper from 'views/home/children/HomeSwiper'
   import RecommendView from 'views/home/children/RecommendView'
   import FeatureView from 'views/home/children/FeatureView'
-  import GoodsList from 'views/home/children/GoodsList'
 
   import NavBar from 'components/common/navbar/NavBar'
   import TabControl from 'components/content/tabControl/TabControl'
+  import GoodsList from 'components/content/goods/GoodsList'
 
   import { getHomeMasterData, getHomeGoodsData } from 'network/home'
   import { goodsType } from 'common/const'
@@ -49,12 +49,13 @@
         HomeSwiper,
         RecommendView,
         FeatureView,
-        GoodsList,
         NavBar,
-        TabControl
+        TabControl,
+        GoodsList
       },
       computed:{
         showGoodsList(){
+          console.log(this.goodsList[goodsType.POP].list);
           return this.goodsList[goodsType.POP].list;
         }
       },

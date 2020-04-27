@@ -1,6 +1,6 @@
 <template>
   <div class="goods-list">
-
+    <goods-list-item v-for="(good, index) in goods " :goodsData="good"/>
   </div>
 </template>
 
@@ -15,7 +15,9 @@
       props: {
         goods: {
           type: Array,
-          default:[]
+          default(){
+            return []
+          }
         }
       },
       comments: {
@@ -25,5 +27,10 @@
 </script>
 
 <style scoped>
-
+  .goods-list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 5px;
+  }
 </style>
