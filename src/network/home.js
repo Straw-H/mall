@@ -1,12 +1,9 @@
 import {request} from './request'
 
-<<<<<<< HEAD
-=======
 /**
  * 请求首页特殊数据
  * @returns {AxiosPromise}
  */
->>>>>>> 2fa94f5705d0299da9d144bacb0e40f29efae2de
 export function getHomeMasterData(){
   return request(
     {
@@ -14,8 +11,6 @@ export function getHomeMasterData(){
     }
   )
 }
-<<<<<<< HEAD
-=======
 
 /**
  * 请求首页商品列表
@@ -34,4 +29,3 @@ export function getHomeGoodsData(type, page){
     }
   )
 }
->>>>>>> 2fa94f5705d0299da9d144bacb0e40f29efae2de
