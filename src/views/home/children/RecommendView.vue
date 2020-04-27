@@ -1,10 +1,17 @@
 <template>
   <div class="recommend">
     <div v-for="item in recommends" class="recommend-item">
+<<<<<<< HEAD
       <a :href="item.link">
         <img :src="item.image" alt="">
         <div>{{item.title}}</div>
       </a>
+=======
+      <div :href="item.link">
+        <img :src="item.image" alt="">
+        <div>{{item.title}}</div>
+      </div>
+>>>>>>> 2fa94f5705d0299da9d144bacb0e40f29efae2de
     </div>
   </div>
 </template>
