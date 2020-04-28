@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <b-scroll>
+    <div id="category">
+        <b-scroll class="content">
           <ul>
             <li>分类1</li>
             <li>分类2</li>

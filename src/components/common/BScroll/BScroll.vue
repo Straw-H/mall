@@ -20,7 +20,15 @@
         BetterScroll
       },
       mounted() {
-        this.scroll = new BetterScroll(this.$refs.scrollRange, {});
+        this.scroll = new BetterScroll(this.$refs.scrollRange, {
+          click: true,
+          probeType: 3
+        });
+
+        // 监听滑动位置
+        this.scroll.on('scroll',index => {
+          console.log(index);
+        })
       }
     }
 

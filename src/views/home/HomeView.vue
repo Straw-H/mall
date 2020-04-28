@@ -17,8 +17,6 @@
                      @tabClick="tabliClick"></tab-control>
         <goods-list :goods="showGoodsList" />
       </scroll>
-      <h1>1</h1>
-      <h1>1</h1>
     </div>
 </template>
 
@@ -117,9 +115,11 @@
 
 <style scoped>
   #home{
-    padding-top: 44px;
+    position: relative;
+    /*padding-top: 44px;*/
     /*视口*/
     height: 100vh;
+    background-color: #fff;
   }
   .nav-bar{
     background-color: var(--color-high-text);
@@ -132,8 +132,13 @@
     top:44px;
   }
   .scroll{
-    height: calc(100% - 100px);
-    overflow: hidden;
+    /*height: calc(100% - 100px);*/
+    position: absolute;
+    top: 44px;
+    bottom: 46px;
+    left: 0;
+    right: 0;
+    /*overflow: hidden;*/
   }
 
 </style>
