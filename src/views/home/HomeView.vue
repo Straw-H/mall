@@ -118,6 +118,8 @@
 <style scoped>
   #home{
     padding-top: 44px;
+    /*视口*/
+    height: 100vh;
   }
   .nav-bar{
     background-color: var(--color-high-text);
@@ -130,7 +132,7 @@
     top:44px;
   }
   .scroll{
-    height:600px;
+    height: calc(100% - 100px);
     overflow: hidden;
   }
 
