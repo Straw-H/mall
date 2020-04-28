@@ -4,16 +4,19 @@
         <nav-bar class="nav-bar">
           <div slot="center">购物街</div>
         </nav-bar>
-      <!-- 轮播图 -->
-      <HomeSwiper :banners="banners"/>
-      <!-- 推荐 -->
-      <recommend-view :recommends="recommends"/>
-      <!-- 本周流行 -->
-      <feature-view/>
-      <!-- 商品分类 -->
-      <tab-control class="tab-control"
-                   :titles="['流行','新款','精选']"></tab-control>
-      <goods-list :goods="showGoodsList" />
+      <scroll class="scroll">
+        <!-- 轮播图 -->
+        <HomeSwiper :banners="banners"/>
+        <!-- 推荐 -->
+        <recommend-view :recommends="recommends"/>
+        <!-- 本周流行 -->
+        <feature-view/>
+        <!-- 商品分类 -->
+        <tab-control class="tab-control"
+                     :titles="['流行','新款','精选']"
+                     @tabClick="tabliClick"></tab-control>
+        <goods-list :goods="showGoodsList" />
+      </scroll>
       <h1>1</h1>
       <h1>1</h1>
     </div>
@@ -27,6 +30,7 @@
   import NavBar from 'components/common/navbar/NavBar'
   import TabControl from 'components/content/tabControl/TabControl'
   import GoodsList from 'components/content/goods/GoodsList'
+  import Scroll from "components/common/BScroll/BScroll";
 
   import { getHomeMasterData, getHomeGoodsData } from 'network/home'
   import { goodsType } from 'common/const'
@@ -42,7 +46,8 @@
             pop:{ page: 0, list:[] },
             sell:{ page: 0, list:[] },
             new:{ page: 0, list:[] }
-          }
+          },
+          currentType: goodsType.POP
         }
       },
       components:{
@@ -51,12 +56,12 @@
         FeatureView,
         NavBar,
         TabControl,
-        GoodsList
+        GoodsList,
+        Scroll
       },
       computed:{
         showGoodsList(){
-          console.log(this.goodsList[goodsType.POP].list);
-          return this.goodsList[goodsType.POP].list;
+          return this.goodsList[this.currentType].list;
         }
       },
       created(){
@@ -86,10 +91,24 @@
         getHomeGoodData(type){
           getHomeGoodsData(type,1)
             .then( result => {
+              console.log(result);
               let goods = result.data.list;
               this.goodsList[type].list.push(...goods);
               this.goodsList[type].page += 1;
             })
+        },
+        // 切换商品类型
+        tabliClick(index){
+          switch (index) {
+            case 0:
+              this.currentType = goodsType.POP;
+              break;
+            case 1:
+              this.currentType = goodsType.NEW;
+              break;
+            case 2:
+              this.currentType = goodsType.SELL;
+          }
         }
       }
 
@@ -109,6 +128,10 @@
   .tab-control{
     position: sticky;
     top:44px;
+  }
+  .scroll{
+    height:600px;
+    overflow: hidden;
   }
 
 </style>

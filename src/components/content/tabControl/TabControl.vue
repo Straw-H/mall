@@ -28,6 +28,9 @@
       methods: {
         itemClick(index){
           this.currentIndex = index;
+
+          // 发生点击事件
+          this.$emit("tabClick",index);
         }
       }
     }

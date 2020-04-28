@@ -1,11 +1,11 @@
 <template>
-  <div class="goods-list-item">
-    <img :src="goodsData.show.img" alt="">
+  <div class="goods-list-item" @click="goodsClick(goodsData.title)">
+    <img :src="goodsData.show.img" alt="" :key="goodsData.shopId">
     <div class="goods-info">
       <p>{{goodsData.title}}</p>
       <div class="goods-info-detal">
         <span class="price">{{goodsData.price}}</span>
-        <span class="orgPrice">{{goodsData.orgPrice}}</span>
+        <s class="orgPrice">{{goodsData.orgPrice}}</s>
         <span class="cfav">{{goodsData.cfav}}</span>
       </div>
     </div>
@@ -22,6 +22,11 @@
               return {}
             }
           }
+      },
+      methods: {
+        goodsClick(data){
+          alert(data);
+        }
       }
     }
 </script>
@@ -39,7 +44,7 @@
   }
   .goods-info{
     padding: 4px 1px;
-    font-size: 16px;
+    font-size: 14px;
   }
   .goods-info p{
     width: 100%;
@@ -57,15 +62,20 @@
   }
   .goods-info-detal{
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     text-align: center;
   }
   .goods-info span{
-    flex: 1;
+    /*flex: 1;*/
   }
   .price{
+    font-size: 16px;
     color: var(--color-tint)
   }
   .orgPrice{
-    color:#eb4868;
+    color: #777777;
+    display: table-cell;
+    vertical-align: bottom;
   }
 </style>
