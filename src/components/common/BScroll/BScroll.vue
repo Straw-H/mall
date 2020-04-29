@@ -16,19 +16,61 @@
           scroll: null
         }
       },
+      props: {
+        probeType:{
+          type: Number,
+          default: 0
+        },
+        pullUpLoad:{
+          type: Boolean,
+          default: false
+        },
+        pullDownRefresh:{
+          type: Boolean,
+          default: false
+        }
+      },
       comments:{
         BetterScroll
       },
       mounted() {
         this.scroll = new BetterScroll(this.$refs.scrollRange, {
+          // 开启事件
           click: true,
-          probeType: 3
+          // 监听滑动位置：记录每次
+          probeType: this.probeType,
+          pullUpLoad: this.pullUpLoad,
+          pullDownRefresh: this.pullDownRefresh
         });
 
-        // 监听滑动位置
-        this.scroll.on('scroll',index => {
-          console.log(index);
+        this.currentIndex();
+
+        // 上拉加载
+        this.scroll.on('pullingUp', () => {
+          setTimeout(() => {
+            console.log("上拉加载");
+          }, 3000)
+          this.scroll.finishPullUp();
         })
+
+        // 下拉刷新
+        this.scroll.on('pullingDown', () => {
+          setTimeout(() => {
+            console.log("下拉刷新");
+          }, 3000)
+          this.scroll.finishPullDown();
+        })
+      },
+      methods: {
+        scrollTop(x, y, time = 400){
+          this.scroll.scrollTo(x, y, time);
+        },
+        currentIndex(){
+          // 监听滑动位置
+          this.scroll.on('scroll',index => {
+            this.$emit("currentIndex", index);
+          })
+        }
       }
     }
 

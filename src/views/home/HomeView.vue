@@ -4,7 +4,11 @@
         <nav-bar class="nav-bar">
           <div slot="center">购物街</div>
         </nav-bar>
-      <scroll class="scroll">
+      <scroll class="scroll"
+              ref="scroll"
+              @currentIndex="currentPosition"
+              :probe-type="3"
+              :pull-up-load="true">
         <!-- 轮播图 -->
         <HomeSwiper :banners="banners"/>
         <!-- 推荐 -->
@@ -17,6 +21,8 @@
                      @tabClick="tabliClick"></tab-control>
         <goods-list :goods="showGoodsList" />
       </scroll>
+      <!-- 回到顶部 -->
+      <back-top @click.native="backTop" v-show="showBackTop"/>
     </div>
 </template>
 
@@ -26,9 +32,10 @@
   import FeatureView from 'views/home/children/FeatureView'
 
   import NavBar from 'components/common/navbar/NavBar'
+  import Scroll from "components/common/BScroll/BScroll"
   import TabControl from 'components/content/tabControl/TabControl'
   import GoodsList from 'components/content/goods/GoodsList'
-  import Scroll from "components/common/BScroll/BScroll";
+  import BackTop from 'components/content/backTop/BackTop'
 
   import { getHomeMasterData, getHomeGoodsData } from 'network/home'
   import { goodsType } from 'common/const'
@@ -45,7 +52,8 @@
             sell:{ page: 0, list:[] },
             new:{ page: 0, list:[] }
           },
-          currentType: goodsType.POP
+          currentType: goodsType.POP,
+          showBackTop: false
         }
       },
       components:{
@@ -53,9 +61,10 @@
         RecommendView,
         FeatureView,
         NavBar,
+        Scroll,
         TabControl,
         GoodsList,
-        Scroll
+        BackTop
       },
       computed:{
         showGoodsList(){
@@ -107,6 +116,14 @@
             case 2:
               this.currentType = goodsType.SELL;
           }
+        },
+        // 回到顶部
+        backTop(){
+          this.$refs.scroll.scrollTop(0, 0, 600);
+        },
+        // 当前位置
+        currentPosition(index){
+          this.showBackTop = index.y < -1000
         }
       }
 
@@ -128,17 +145,16 @@
     letter-spacing:3px;
   }
   .tab-control{
-    position: sticky;
+    /*使用better-scroll时无效*/
+    /*position: sticky;*/
     top:44px;
   }
   .scroll{
-    /*height: calc(100% - 100px);*/
     position: absolute;
     top: 44px;
     bottom: 46px;
     left: 0;
     right: 0;
-    /*overflow: hidden;*/
   }
 
 </style>

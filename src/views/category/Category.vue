@@ -1,6 +1,6 @@
 <template>
     <div id="category">
-        <b-scroll class="content">
+        <scroll class="content">
           <ul>
             <li>分类1</li>
             <li>分类2</li>
@@ -103,21 +103,30 @@
             <li>分类99</li>
             <li>分类100</li>
           </ul>
-        </b-scroll>
+        </scroll>
     </div>
 </template>
 
 <script>
-  import BScroll from "components/common/BScroll/BScroll";
+  import Scroll from "components/common/BScroll/BScroll";
     export default {
       name: 'Category',
-      components: {BScroll},
-      comments:{
-        BScroll
+      components: {
+        Scroll
       }
     }
 </script>
 
 <style scoped>
-
+#category{
+  position: relative;
+  height: 100vh;
+}
+  .content{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 46px;
+  }
 </style>
