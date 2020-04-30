@@ -1,6 +1,8 @@
 <template>
   <div id="app">
+    <keep-alive>
       <router-view></router-view>
+    </keep-alive>
     <man-tab-bar />
   </div>
 </template>
@@ -18,10 +20,4 @@ export default {
 
 <style>
   @import 'assets/css/base.css';
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
 </style>

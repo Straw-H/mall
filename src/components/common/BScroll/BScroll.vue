@@ -80,6 +80,10 @@
         // 通知数据加载完毕
         finishPullUp(){
           this.scroll && this.scroll.finishPullUp();
+        },
+        // 获取Y位置
+        getScrollY(){
+          return this.scroll ? this.scroll.y : 0;
         }
       }
     }

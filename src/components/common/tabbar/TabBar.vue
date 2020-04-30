@@ -20,5 +20,6 @@
         text-align: center;
         background-color: #f6f6f6;
         box-shadow: 0 -2px 2px rgba(202, 208, 204, 0.35);
+        z-index: 100000;
     }
 </style>

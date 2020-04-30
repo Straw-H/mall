@@ -1,6 +1,6 @@
 <template>
   <div class="goods-list-item" @click="goodsClick(goodsData.title)">
-    <img :src="goodsData.show.img" alt="" :key="goodsData.shopId" @load="itemImgLoad">
+    <img v-lazy="goodsData.show.img" alt="" :key="goodsData.shopId" @load="itemImgLoad">
     <div class="goods-info">
       <p>{{goodsData.title}}</p>
       <div class="goods-info-detal">
@@ -43,6 +43,7 @@
   }
   .goods-list-item img{
     width: 100%;
+    max-height: 260px;
     border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
