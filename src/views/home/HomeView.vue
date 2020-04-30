@@ -8,7 +8,8 @@
               ref="scroll"
               @currentIndex="currentPosition"
               :probe-type="3"
-              :pull-up-load="true">
+              :pull-up-load="true"
+              @pullingUp="pullingUp">
         <!-- 轮播图 -->
         <HomeSwiper :banners="banners"/>
         <!-- 推荐 -->
@@ -83,7 +84,44 @@
         // --上新
         this.getHomeGoodData(goodsType.NEW);
       },
+      mounted() {
+        let refresh = this.debounce(this.$refs.scroll && this.$refs.scroll.refresh, 700);
+        // 监听事件总线事件
+        this.$bus.$on("itemImgLoad", ()=>{
+          // 防抖动刷新
+          refresh();
+          // 当创建好scroll后再调用方法
+          // this.$refs.scroll && this.$refs.scroll.refresh()
+        })
+      },
       methods:{
+        // 防抖函数
+        debounce(func, wait = 400){
+          let time = null;
+          return function(...args){
+            if(time) clearTimeout(time)
+
+            time = setTimeout(() => {
+              func.apply(this, args)
+            }, wait)
+          }
+        },
+        // 回到顶部
+        backTop(){
+          this.$refs.scroll && this.$refs.scroll.scrollTop(0, 0, 600);
+        },
+        // 当前位置
+        currentPosition(index){
+          this.showBackTop = index.y < -1000
+        },
+        // 上拉加载商品数据
+        pullingUp(){
+          this.getHomeGoodData(this.currentType);
+          this.$refs.scroll && this.$refs.scroll.finishPullUp();
+        },
+        /**
+         * 网络请求相关
+         */
         // 轮播图数据
         getHomeMasterData(){
           getHomeMasterData()
@@ -96,7 +134,9 @@
         },
         // 商品数据
         getHomeGoodData(type){
-          getHomeGoodsData(type,1)
+          let page = this.goodsList[type].page +1;
+          // 网络请求
+          getHomeGoodsData(type, page)
             .then( result => {
               console.log(result);
               let goods = result.data.list;
@@ -116,14 +156,6 @@
             case 2:
               this.currentType = goodsType.SELL;
           }
-        },
-        // 回到顶部
-        backTop(){
-          this.$refs.scroll.scrollTop(0, 0, 600);
-        },
-        // 当前位置
-        currentPosition(index){
-          this.showBackTop = index.y < -1000
         }
       }
 

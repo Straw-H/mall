@@ -34,6 +34,7 @@
         BetterScroll
       },
       mounted() {
+        // 挂载完后获取元素
         this.scroll = new BetterScroll(this.$refs.scrollRange, {
           // 开启事件
           click: true,
@@ -46,12 +47,7 @@
         this.currentIndex();
 
         // 上拉加载
-        this.scroll.on('pullingUp', () => {
-          setTimeout(() => {
-            console.log("上拉加载");
-          }, 3000)
-          this.scroll.finishPullUp();
-        })
+        this.pullingUp();
 
         // 下拉刷新
         this.scroll.on('pullingDown', () => {
@@ -70,6 +66,21 @@
           this.scroll.on('scroll',index => {
             this.$emit("currentIndex", index);
           })
+        },
+        // 重新计算better-scroll的高度
+        refresh(){
+          this.scroll.refresh()
+        },
+        // 上拉加载
+        pullingUp(){
+          this.scroll.on('pullingUp', () => {
+            this.$emit("pullingUp")
+          })
+        },
+        // 通知数据加载完毕
+        finishPullUp(){
+          console.log("---");
+          this.scroll.finishPullUp();
         }
       }
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="goods-list-item" @click="goodsClick(goodsData.title)">
-    <img :src="goodsData.show.img" alt="" :key="goodsData.shopId">
+    <img :src="goodsData.show.img" alt="" :key="goodsData.shopId" @load="itemImgLoad">
     <div class="goods-info">
       <p>{{goodsData.title}}</p>
       <div class="goods-info-detal">
@@ -26,6 +26,11 @@
       methods: {
         goodsClick(data){
           alert(data);
+        },
+        // 图片加载完成
+        itemImgLoad(){
+          // 通过事件总线发送事件
+          this.$bus.$emit("itemImgLoad")
         }
       }
     }
