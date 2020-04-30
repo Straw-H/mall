@@ -11,7 +11,8 @@
               :pull-up-load="true"
               @pullingUp="pullingUp">
         <!-- 轮播图 -->
-        <HomeSwiper :banners="banners"/>
+        <HomeSwiper :banners="banners"
+                    @swiperImgLoad="swiperImgLoad"/>
         <!-- 推荐 -->
         <recommend-view :recommends="recommends"/>
         <!-- 本周流行 -->
@@ -19,7 +20,8 @@
         <!-- 商品分类 -->
         <tab-control class="tab-control"
                      :titles="['流行','新款','精选']"
-                     @tabClick="tabliClick"></tab-control>
+                     @tabClick="tabliClick"
+                     ref="tabControlIn"></tab-control>
         <goods-list :goods="showGoodsList" />
       </scroll>
       <!-- 回到顶部 -->
@@ -40,6 +42,7 @@
 
   import { getHomeMasterData, getHomeGoodsData } from 'network/home'
   import { goodsType } from 'common/const'
+  import { debounce } from  'common/util'
 
     export default {
       name: 'HomeView',
@@ -53,8 +56,13 @@
             sell:{ page: 0, list:[] },
             new:{ page: 0, list:[] }
           },
+          // 当前展示数据的类型
           currentType: goodsType.POP,
-          showBackTop: false
+          // 控制回到顶部
+          showBackTop: false,
+          // 顶部距离
+          tabControllTop: 0
+
         }
       },
       components:{
@@ -85,26 +93,21 @@
         this.getHomeGoodData(goodsType.NEW);
       },
       mounted() {
-        let refresh = this.debounce(this.$refs.scroll && this.$refs.scroll.refresh, 700);
+        let refresh = debounce(this.$refs.scroll.refresh, 70);
         // 监听事件总线事件
         this.$bus.$on("itemImgLoad", ()=>{
           // 防抖动刷新
           refresh();
-          // 当创建好scroll后再调用方法
-          // this.$refs.scroll && this.$refs.scroll.refresh()
         })
+
       },
       methods:{
-        // 防抖函数
-        debounce(func, wait = 400){
-          let time = null;
-          return function(...args){
-            if(time) clearTimeout(time)
-
-            time = setTimeout(() => {
-              func.apply(this, args)
-            }, wait)
-          }
+        swiperImgLoad(){
+          /**
+           * 获取tab controll的offsetTop
+           * 使用$el获取子元素
+           */
+          this.tabControllTop = this.$refs.tabControlIn.$el.offsetTop;
         },
         // 回到顶部
         backTop(){
@@ -138,7 +141,6 @@
           // 网络请求
           getHomeGoodsData(type, page)
             .then( result => {
-              console.log(result);
               let goods = result.data.list;
               this.goodsList[type].list.push(...goods);
               this.goodsList[type].page += 1;

@@ -54,12 +54,12 @@
           setTimeout(() => {
             console.log("下拉刷新");
           }, 3000)
-          this.scroll.finishPullDown();
+          this.scroll && this.scroll.finishPullDown();
         })
       },
       methods: {
         scrollTop(x, y, time = 400){
-          this.scroll.scrollTo(x, y, time);
+          this.scroll && this.scroll.scrollTo(x, y, time);
         },
         currentIndex(){
           // 监听滑动位置
@@ -69,7 +69,7 @@
         },
         // 重新计算better-scroll的高度
         refresh(){
-          this.scroll.refresh()
+          this.scroll && this.scroll.refresh()
         },
         // 上拉加载
         pullingUp(){
@@ -79,8 +79,7 @@
         },
         // 通知数据加载完毕
         finishPullUp(){
-          console.log("---");
-          this.scroll.finishPullUp();
+          this.scroll && this.scroll.finishPullUp();
         }
       }
     }
