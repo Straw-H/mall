@@ -20,15 +20,12 @@
 
 <style scoped>
   .nav-bar{
-    position: relative;
-    top: 0;
-    left: 0;
-    right: 0;
     display: flex;
     height: 44px;
     line-height: 44px;
     text-align: center;
     z-index: 10000;
+    box-shadow: 0 2px 2px rgba(202, 208, 204, 0.35);
   }
   .nav-left, .nav-right{
     width:60px;

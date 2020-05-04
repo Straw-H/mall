@@ -1,12 +1,13 @@
 <template>
-    <div id="home">
+    <div id="home" class="minirefresh-wrap">
       <!-- 标题 -->
         <nav-bar class="nav-bar">
           <div slot="center">购物街</div>
         </nav-bar>
-      <tab-control class="tab-control"
+      <tab-control class="tab-control-out"
                    :titles="['流行','新款','精选']"
                    @tabClick="tabliClick"
+                   @click.native="syncTabIndex"
                    ref="tabControlOut"
                    v-show="isTabFixed"></tab-control>
       <scroll class="scroll"
@@ -17,7 +18,7 @@
               @pullingUp="pullingUp">
         <!-- 轮播图 -->
         <HomeSwiper :banners="banners"
-                    @swiperImgLoad="swiperImgLoad"/>
+                    @swiperImgLoad="swiperImgLoad" />
         <!-- 推荐 -->
         <recommend-view :recommends="recommends"/>
         <!-- 本周流行 -->
@@ -25,6 +26,7 @@
         <!-- 商品分类 -->
         <tab-control :titles="['流行','新款','精选']"
                      @tabClick="tabliClick"
+                     @click.native="syncTabIndex"
                      ref="tabControlIn"></tab-control>
         <goods-list :goods="showGoodsList" />
       </scroll>
@@ -46,7 +48,7 @@
 
   import { getHomeMasterData, getHomeGoodsData } from 'network/home'
   import { goodsType } from 'common/const'
-  import { debounce } from  'common/util'
+  import { itemImgListerer, backTopMixin, tabControllMixin } from  'common/mixin'
 
     export default {
       name: 'HomeView',
@@ -60,14 +62,11 @@
             sell:{ page: 0, list:[] },
             new:{ page: 0, list:[] }
           },
-          // 当前展示数据的类型
-          currentType: goodsType.POP,
-          // 控制回到顶部
-          showBackTop: false,
           // 顶部距离
           tabControllTop: 0,
           isTabFixed: false,
-          saveY: 0
+          saveY: 0,
+          itemImgListerer: null
         }
       },
       components:{
@@ -85,7 +84,13 @@
           return this.goodsList[this.currentType].list;
         }
       },
+      mixins: [itemImgListerer, backTopMixin, tabControllMixin],
       methods:{
+        syncTabIndex(){
+          // 同步两个tab的位置
+          this.$refs.tabControlOut.currentIndex = this.currentTabIndex;
+          this.$refs.tabControlIn.currentIndex = this.currentTabIndex;
+        },
         swiperImgLoad(){
           /**
            * 获取tab controll的offsetTop
@@ -93,21 +98,18 @@
            */
           this.tabControllTop = this.$refs.tabControlIn.$el.offsetTop;
         },
-        // 回到顶部
-        backTop(){
-          this.$refs.scroll && this.$refs.scroll.scrollTop(0, 0, 600);
-        },
         // 当前位置
         currentPosition(index){
-          // 显示回到顶部
-          this.showBackTop = index.y < -1000
+          let position = index.y;
+          // 显示BackTop
+          this.listenShowBackTop(position)
 
           // 显示tabControll
-          this.isTabFixed = index.y < - this.tabControllTop
+          this.isTabFixed = position < - this.tabControllTop
         },
         // 上拉加载商品数据
         pullingUp(){
-          this.getHomeGoodData(this.currentType);
+          this.getHomeGoodData(this.currentType)
           this.$refs.scroll && this.$refs.scroll.finishPullUp();
         },
         /**
@@ -133,24 +135,6 @@
               this.goodsList[type].list.push(...goods);
               this.goodsList[type].page += 1;
             })
-        },
-        // 切换商品类型
-        tabliClick(index){
-          switch (index) {
-            case 0:
-              this.currentType = goodsType.POP;
-              break;
-            case 1:
-              this.currentType = goodsType.NEW;
-              break;
-            case 2:
-              this.currentType = goodsType.SELL;
-          }
-
-          // 同步两个tab的位置
-          this.$refs.tabControlOut.currentIndex = index;
-          this.$refs.tabControlIn.currentIndex = index;
-
         }
       },
       activated() {
@@ -158,7 +142,11 @@
         this.$refs.scroll.refresh();
       },
       deactivated() {
+        // 保存当前Scroll的位置
         this.saveY = this.$refs.scroll.getScrollY();
+
+        // 取消全局事件的监听
+        this.$bus.$off("itemImgLoad", this.itemImgListerer);
       },
       created(){
         // 1、获取首页相关的数据
@@ -171,17 +159,9 @@
         this.getHomeGoodData(goodsType.SELL);
         // --上新
         this.getHomeGoodData(goodsType.NEW);
-      },
-      mounted() {
-        let refresh = debounce(this.$refs.scroll.refresh, 70);
-        // 监听事件总线事件
-        this.$bus.$on("itemImgLoad", ()=>{
-          // 防抖动刷新
-          refresh();
-        })
-
       }
     }
+
 </script>
 
 <style scoped>
@@ -192,13 +172,16 @@
     background-color: #fff;
   }
   .nav-bar{
+    position: relative;
+    z-index: 10;
     background-color: var(--color-high-text);
     color: #fff;
     font-weight: 700;
     letter-spacing:3px;
   }
-  .tab-control{
+  .tab-control-out{
     position: relative;
+    /*top: 44px;*/
     z-index: 1110;
   }
   .scroll{

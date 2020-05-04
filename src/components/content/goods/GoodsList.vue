@@ -28,9 +28,10 @@
 
 <style scoped>
   .goods-list{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     padding: 5px;
+    background-color: #fff;
   }
 </style>

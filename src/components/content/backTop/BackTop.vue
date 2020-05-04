@@ -1,7 +1,9 @@
 <template>
+  <transition name="slide-fade">
     <div class="back-top">
       <img src="~assets/images/common/top.svg" alt="">
     </div>
+  </transition>
 </template>
 
 <script>

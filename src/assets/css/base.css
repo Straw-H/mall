@@ -7,6 +7,7 @@
     --color-text: #666;
     --color-high-text: #409EFF;
     --color-tint: #53A8FF;
+  --color-price: #ff5777;
     --color-background: #fff;
     --font-size: 14px;
     --line-height: 1.5;
@@ -65,4 +66,68 @@ a {
 
 .right {
     float: right;
+}
+
+li{
+  list-style: none;
+}
+.nav-bar{
+  position: relative;
+  z-index: 10;
+  background-color: var(--color-high-text);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing:3px;
+}
+
+/*vue动画*/
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+  /* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(5px);
+  opacity: 0;
+}
+
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 0;
+  bottom: 46px;
+  will-change: transform;
+  transition: all 600ms;
+  height: 100%;
+  backface-visibility: hidden;
+  /*-webkit-perspective: 10px;*/
+}
+.slide-left-enter {
+  transform: translateX(-5px);
+  /*transform:rotateY(-12deg);*/
+}
+.slide-left-leave-active {
+  transform: translateX(-5px);
+  /*transform:rotateY(12deg);*/
+}
+.slide-right-enter {
+  transform: translateX(-5px);
+  /*transform:rotateY(12deg);*/
+}
+.slide-right-leave-active {
+  transform: translateX(-5px);
+  /*transform:rotateY(-12deg);*/
 }

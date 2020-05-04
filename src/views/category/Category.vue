@@ -1,132 +1,161 @@
 <template>
     <div id="category">
-        <scroll class="content">
-          <ul>
-            <li>分类1</li>
-            <li>分类2</li>
-            <li>分类3</li>
-            <li>分类4</li>
-            <li>分类5</li>
-            <li>分类6</li>
-            <li>分类7</li>
-            <li>分类8</li>
-            <li>分类9</li>
-            <li>分类10</li>
-            <li>分类11</li>
-            <li>分类12</li>
-            <li>分类13</li>
-            <li>分类14</li>
-            <li>分类15</li>
-            <li>分类16</li>
-            <li>分类17</li>
-            <li>分类18</li>
-            <li>分类19</li>
-            <li>分类20</li>
-            <li>分类21</li>
-            <li>分类22</li>
-            <li>分类23</li>
-            <li>分类24</li>
-            <li>分类25</li>
-            <li>分类26</li>
-            <li>分类27</li>
-            <li>分类28</li>
-            <li>分类29</li>
-            <li>分类30</li>
-            <li>分类31</li>
-            <li>分类32</li>
-            <li>分类33</li>
-            <li>分类34</li>
-            <li>分类35</li>
-            <li>分类36</li>
-            <li>分类37</li>
-            <li>分类38</li>
-            <li>分类39</li>
-            <li>分类40</li>
-            <li>分类41</li>
-            <li>分类42</li>
-            <li>分类43</li>
-            <li>分类44</li>
-            <li>分类45</li>
-            <li>分类46</li>
-            <li>分类47</li>
-            <li>分类48</li>
-            <li>分类49</li>
-            <li>分类50</li>
-            <li>分类51</li>
-            <li>分类52</li>
-            <li>分类53</li>
-            <li>分类54</li>
-            <li>分类55</li>
-            <li>分类56</li>
-            <li>分类57</li>
-            <li>分类58</li>
-            <li>分类59</li>
-            <li>分类60</li>
-            <li>分类61</li>
-            <li>分类62</li>
-            <li>分类63</li>
-            <li>分类64</li>
-            <li>分类65</li>
-            <li>分类66</li>
-            <li>分类67</li>
-            <li>分类68</li>
-            <li>分类69</li>
-            <li>分类70</li>
-            <li>分类71</li>
-            <li>分类72</li>
-            <li>分类73</li>
-            <li>分类74</li>
-            <li>分类75</li>
-            <li>分类76</li>
-            <li>分类77</li>
-            <li>分类78</li>
-            <li>分类79</li>
-            <li>分类80</li>
-            <li>分类81</li>
-            <li>分类82</li>
-            <li>分类83</li>
-            <li>分类84</li>
-            <li>分类85</li>
-            <li>分类86</li>
-            <li>分类87</li>
-            <li>分类88</li>
-            <li>分类89</li>
-            <li>分类90</li>
-            <li>分类91</li>
-            <li>分类92</li>
-            <li>分类93</li>
-            <li>分类94</li>
-            <li>分类95</li>
-            <li>分类96</li>
-            <li>分类97</li>
-            <li>分类98</li>
-            <li>分类99</li>
-            <li>分类100</li>
-          </ul>
+      <nav-bar><div slot="center">商品分类</div></nav-bar>
+
+      <div class="content">
+        <category-side class="side-content"
+                       :category="category"
+                       @sideCategory="sideCategory"/>
+
+        <scroll class="subcategory-content"
+                :probe-type="3"
+                @currentIndex="currentPosition"
+                ref="scroll" :data="[subcategory, categoryGoods]">
+          <div>
+            <category-item-info :subcategory="subcategory" @categoryImgLoad="categoryImgLoad"/>
+            <category-goods :category-goods="categoryGoods"
+                            ref="goods"/>
+          </div>
         </scroll>
+
+      </div>
+      <!-- 回到顶部 -->
+      <back-top @click.native="backTop" v-show="showBackTop"/>
     </div>
 </template>
 
 <script>
-  import Scroll from "components/common/BScroll/BScroll";
+  import CategorySide from './children/CategorySide'
+  import CategoryItemInfo from './children/CategoryItemInfo'
+  import CategoryGoods from './children/CategoryGoods'
+
+  import NavBar from 'components/common/navbar/NavBar'
+  import Scroll from "components/common/BScroll/BScroll"
+  import BackTop from 'components/content/backTop/BackTop'
+
+  import { backTopMixin, tabControllMixin } from  'common/mixin'
+
+  import {
+    getCategory,
+    getSubCategory,
+    getCategoryGoods
+  } from 'network/category'
+  import {goodsType} from "../../common/const";
+
     export default {
       name: 'Category',
       components: {
-        Scroll
+        CategorySide,
+        CategoryItemInfo,
+        CategoryGoods,
+        NavBar,
+        Scroll,
+        BackTop
+      },
+      mixins: [backTopMixin, tabControllMixin],
+      data(){
+        return {
+          // 分类列表
+          category:[],
+          // 子分类列表
+          subcategory: [],
+          // 分类中的商品列表
+          categoryGoods: {
+            "pop":[],
+            "sell": [],
+            "new":[]
+          },
+          currentCategory: 0,
+          showTabControllTop: 0
+        }
+      },
+      created() {
+        this._getCategory()
+      },
+      methods:{
+        // 获取tabControll的offsetTop
+        categoryImgLoad(){
+          this.showTabControllTop = this.$refs.goods.$el.offsetTop
+          console.log(this.showTabControllTop)
+        },
+        // 当前位置
+        currentPosition(index){
+          let position = index.y;
+          // 显示BackTop
+          this.listenShowBackTop(position)
+
+          // 显示tabControll
+          this.isTabFixed = position < - this.tabControllTop
+        },
+        // 侧边分类数据
+        sideCategory(index){
+          if(this.currentCategory !== index){
+            this.currentCategory = index;
+            // 获取子分类数据
+            this._getSubCategory();
+            // 子类商品数据
+            this._setCategoryGoods();
+          }
+        },
+        _setCategoryGoods(){
+          // 获取第一条记录的商品
+          this._getCategoryGoods(goodsType.POP)
+          this._getCategoryGoods(goodsType.SELL)
+          this._getCategoryGoods(goodsType.NEW)
+        },
+        /**
+         * 获取网络数据
+         */
+        // 获取分类数据
+        _getCategory(){
+          getCategory().then(res => {
+            let data = res.data;
+            this.category = data.category.list;
+
+            // 默认请求第一条记录
+            this._getSubCategory();
+            this._setCategoryGoods();
+          })
+        },
+        // 获取子分类数据
+        _getSubCategory(){
+          let maitKey = this.category[this.currentCategory].maitKey;
+          getSubCategory(maitKey).then(res => {
+            this.subcategory = res.data.list;
+          })
+        },
+        // 获取子分类中的商品
+        _getCategoryGoods(type){
+          let miniWallkey = this.category[this.currentCategory].miniWallkey;
+          getCategoryGoods(miniWallkey, type).then(res => {
+            this.categoryGoods[type] = res
+          })
+        }
       }
     }
 </script>
 
 <style scoped>
-#category{
-  position: relative;
-  height: 100vh;
-}
   .content{
     position: absolute;
-    top: 0;
+    top: 44px;
     left: 0;
     right: 0;
     bottom: 46px;
+    display: flex;
+    background-color: #F2F2F2;
+  }
+  .side-content{
+    background-color: #fff;
+  }
+  .subcategory-content{
+    flex: 1;
+    padding: 8px 4px;
+    border-left: 4px solid #F2F2F2;
+  }
+  .tab-control{
+    position: absolute;
+    top: 0;
+    flex: 1;
   }
 </style>

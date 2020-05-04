@@ -9,3 +9,7 @@ export const goodsType = {
   NEW: "new"
 }
 
+// 显示顶部的位置
+export const BACK_POSITION = -800
+
+

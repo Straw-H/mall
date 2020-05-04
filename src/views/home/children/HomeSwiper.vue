@@ -1,9 +1,11 @@
 <template>
-  <swiper>
-    <swiper-item v-for="(item, index) in banners" :key="index">
-      <img :src="item.image" :alt="item.title" :title="item.title" @load="swiperImgLoad">
-    </swiper-item>
-  </swiper>
+  <viewer :images="banners">
+    <swiper>
+      <swiper-item v-for="(item, index) in banners" :key="index">
+          <img :src="item.image" :alt="item.title" :title="item.title" @load="swiperImgLoad">
+      </swiper-item>
+    </swiper>
+  </viewer>
 </template>
 
 <script>
@@ -13,7 +15,7 @@
       name: 'HomeSwiper',
       data(){
         return{
-          currentTop : false
+          isImgLoad : false
         }
       },
       props: {
@@ -30,9 +32,9 @@
       },
       methods: {
         swiperImgLoad(){
-          if(!this.currentTop){
+          if(!this.isImgLoad){
             this.$emit("swiperImgLoad");
-            this.currentTop = true;
+            this.isImgLoad = true;
           }
         }
       }

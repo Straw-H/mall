@@ -1,12 +1,15 @@
 <template>
-  <div class="goods-list-item" @click="goodsClick(goodsData.title)">
-    <img v-lazy="goodsData.show.img" alt="" :key="goodsData.shopId" @load="itemImgLoad">
+  <div class="goods-list-item" @click="goodsClick">
+    <div class="item-img">
+      <img v-lazy="showImage" class="burl">
+      <img v-lazy="showImage" alt="" :key="imageKey" @load="itemImgLoad" class="show">
+    </div>
     <div class="goods-info">
       <p>{{goodsData.title}}</p>
       <div class="goods-info-detal">
-        <span class="price">{{goodsData.price}}</span>
+        <span class="price">{{goodsData.price | setPrice}}</span>
         <s class="orgPrice">{{goodsData.orgPrice}}</s>
-        <span class="cfav">{{goodsData.cfav}}</span>
+<!--        <span class="cfav">{{goodsData.cfav}}</span>-->
       </div>
     </div>
   </div>
@@ -23,14 +26,38 @@
             }
           }
       },
+      computed:{
+        showImage(){
+          return this.goodsData.image || this.goodsData.img || this.goodsData.show.img
+        },
+        imageKey(){
+          return this.goodsData.iid || this.goodsData.shop_id
+        }
+      },
       methods: {
-        goodsClick(data){
-          alert(data);
+        goodsClick(){
+          let id = this.goodsData.iid;
+          if(id == undefined){
+            alert(this.goodsData.title)
+            return;
+          }
+          this.$router.push({
+            path: "/detail",
+            query: {
+              id: id
+            }
+          })
+
         },
         // 图片加载完成
         itemImgLoad(){
           // 通过事件总线发送事件
           this.$bus.$emit("itemImgLoad")
+        }
+      },
+      filters:{
+        setPrice(price){
+          return "￥" + price;
         }
       }
     }
@@ -38,19 +65,39 @@
 
 <style scoped>
   .goods-list-item {
-    width: 46%;
-    margin-bottom: 6px;
-  }
-  .goods-list-item img{
     width: 100%;
-    max-height: 260px;
+    height: auto;
+    margin-bottom: 6px;
+    padding: 0 4px;
+  }
+  .item-img{
+    position: relative;
+    height: calc(100% - 78px);
     border-radius: 4px;
     overflow: hidden;
+  }
+  .item-img img{
+    width: 100%;
+    vertical-align: top;
+  }
+  .item-img img.burl{
+    height: 100%;
+    filter: blur(6px);
+  }
+  .item-img img.show{
+    border-radius: 4px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translateY(-50%);
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
   }
   .goods-info{
-    padding: 4px 1px;
+    padding: 12px 1px;
     font-size: 14px;
+    height: 78px;
   }
   .goods-info p{
     width: 100%;

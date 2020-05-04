@@ -41,7 +41,35 @@
           // 监听滑动位置：记录每次
           probeType: this.probeType,
           pullUpLoad: this.pullUpLoad,
-          pullDownRefresh: this.pullDownRefresh
+          // pullDownRefresh: this.pullDownRefresh,
+          pullDownRefresh: {
+            threshold: 50,
+            stop: 20
+          },
+          // 开启动画
+          bounce: {
+            top: true,
+            bottom: true,
+            left: true,
+            right: true
+          },
+          // 开启滚动条
+          scrollbar: {
+            fade: true,
+            interactive: false // 1.8.0 新增
+          },
+          //  PC 端的鼠标滚轮
+          mouseWheel: {
+            speed: 20,
+            invert: false,
+            easeTime: 300
+          },
+          // 缩放比例
+          zoom: {
+            start: 1,
+            min: 1,
+            max: 1
+          }
         });
 
         this.currentIndex();
