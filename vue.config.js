@@ -1,10 +1,7 @@
-const path = require('path');
-
-function resolve(dir) {
-  return path.join(__dirname, dir);
-}
-
 module.exports = {
+  // baseUrl: './', //vue-cli3以下版本
+  publicPath: './', // vue-cli3以上
+  // publicPath: process.env.NODE_ENV === "production" ? "/mall" : "/",
     devServer: {
         port: 80, // 端口号
       // 需要内网穿透时配置
@@ -21,11 +18,5 @@ module.exports = {
                 'store' : '@/store'
             }
         }
-    },
-  /*configureWebpack: config => {
-    require('vux-loader').merge(config, {
-      options: {},
-      plugins: ['vux-ui']
-    })
-  }*/
+    }
 }

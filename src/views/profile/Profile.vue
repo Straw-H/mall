@@ -72,7 +72,7 @@
       },
       methods:{
         messageClick(){
-          alert("消息中心")
+          this.$toast.show("消息中心")
         },
         currentPosition(index){
           let position = index.y;

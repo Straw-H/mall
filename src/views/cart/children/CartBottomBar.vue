@@ -32,7 +32,7 @@
       },
       methods:{
         toPayClick(){
-          alert("请支付：" + this.currentPrice + "元")
+          this.$toast.show("请支付：" + this.currentPrice + "元")
         },
         checkedAll(event){
           let status = event.target.checked

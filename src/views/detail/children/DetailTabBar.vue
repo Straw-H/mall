@@ -60,7 +60,7 @@
           this.$emit("addCartClick")
         },
         buyClick(){
-          alert("立即购买")
+          this.$emit("buyClick")
         }
       }
 

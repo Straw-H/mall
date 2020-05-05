@@ -23,7 +23,9 @@
         <detail-recommend-info :detail-recommend="detailRecommend"
                                ref="recommend"/>
       </scroll>
-      <detail-tab-bar :shop-name="shop.name" @addCartClick="addCartClick"/>
+      <detail-tab-bar :shop-name="shop.name"
+                      @addCartClick="addCartClick"
+                      @buyClick="buyClick"/>
       <!-- 回到顶部 -->
       <back-top @click.native="backTop"
                 v-show="showBackTop"/>
@@ -45,6 +47,8 @@
   import BackTop from 'components/content/backTop/BackTop'
 
   import { itemImgListerer, backTopMixin } from  'common/mixin'
+
+
 
   import {
     getHomeGoodsDetail,
@@ -102,6 +106,9 @@
       },
       mixins: [itemImgListerer, backTopMixin],
       methods: {
+        buyClick(){
+          this.$toast.show("立即购买")
+        },
         // 添加购物车
         addCartClick(){
           const product = {
@@ -114,7 +121,7 @@
             check : false
           }
           this.$store.dispatch("addCart", product)
-          alert("添加购物车成功")
+          this.$toast.show("添加购物车成功")
         },
         // 1、获取需要的五个offsetTop
         _getOffsetTop(){

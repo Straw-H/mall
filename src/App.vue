@@ -41,7 +41,7 @@ export default {
         }
       }
     }
-  },
+  }
   /*computed: {
     ...mapState({
       isLoading: state => state.vux.isLoading

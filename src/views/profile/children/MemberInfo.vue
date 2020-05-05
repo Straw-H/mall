@@ -27,7 +27,7 @@
       },
       methods:{
         memberInfoClick(){
-          alert("账号管理")
+          this.$toast.show("账号管理")
         }
       }
     }

@@ -31,7 +31,7 @@
       },
       methods:{
         itemClick(item){
-          alert(item.title)
+          this.$toast.show(item.title)
         },
         categoryImgLoad(){
           if(++this.currentCount === this.subcategory.length) {

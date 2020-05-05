@@ -66,14 +66,14 @@
         },
         cutProductClick(){
           if(this.product.count - 1 < 1){
-            alert("该宝贝不能减少了呦~")
+            this.$toast.show("该宝贝不能减少了呦~")
             return;
           }
           this.$store.dispatch("cutCount", this.product)
         },
         addProductClick(){
           if(this.product.count + 1 > 10){
-            alert("不能再多了")
+            this.$toast.show("不能再多了")
             return;
           }
           this.$store.dispatch("addCount", this.product)

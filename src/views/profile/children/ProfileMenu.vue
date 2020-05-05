@@ -23,7 +23,7 @@
       },
       methods:{
         menuItemClick(item){
-          alert(item.text)
+          this.$toast.show(item.text)
         }
       }
     }
